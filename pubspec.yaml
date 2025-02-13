@@ -23,6 +23,7 @@ dependencies:
   flutter_easyloading: ^3.0.5
   pocketbase: ^0.21.0
   oxidized: ^6.2.0
+  email_validator: ^3.0.0
 
 dev_dependencies:
   flutter_test:
