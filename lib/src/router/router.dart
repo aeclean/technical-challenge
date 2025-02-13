@@ -1,6 +1,10 @@
 // GoRouter configuration
 import "dart:async";
 
+import "package:faithwave_app/src/screens/home_screen.dart";
+import "package:faithwave_app/src/screens/initial_screen.dart";
+import "package:faithwave_app/src/screens/login_screen.dart";
+import "package:faithwave_app/src/screens/register_screen.dart";
 import "package:flutter/material.dart";
 import "package:go_router/go_router.dart";
 import "package:faithwave_app/src/router/screen_params.dart";
@@ -25,6 +29,14 @@ enum AppRoute<ParamsType extends ScreenParams<ParamsType>> {
   home<NoParams>(
     path: "/home",
     isAuthEnforcementRequired: true,
+  ),
+  login<NoParams>(
+    path: "/login",
+    isAuthEnforcementRequired: false,
+  ),
+  register<NoParams>(
+    path: "/register",
+    isAuthEnforcementRequired: false,
   ),
   ;
 
@@ -75,7 +87,22 @@ GoRouter buildRouter({
             GoRoute(
               name: AppRoute.initial.name,
               path: AppRoute.initial.path,
-              builder: (context, state) => const Center(child: Text("Hello")),
+              builder: (context, state) => const InitialScreen(),
+            ),
+            GoRoute(
+              name: AppRoute.login.name,
+              path: AppRoute.login.path,
+              builder: (context, state) => const LoginScreen(),
+            ),
+            GoRoute(
+              name: AppRoute.register.name,
+              path: AppRoute.register.path,
+              builder: (context, state) => const RegisterScreen(),
+            ),
+            GoRoute(
+              name: AppRoute.home.name,
+              path: AppRoute.home.path,
+              builder: (context, state) => const HomeScreen(),
             ),
           ],
         ),
