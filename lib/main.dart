@@ -2,6 +2,7 @@
 
 import "dart:async";
 
+import "package:faithwave_app/src/di.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:faithwave_app/src/app.dart";
@@ -19,6 +20,7 @@ void main() async {
           DeviceOrientation.portraitDown,
         ],
       );
+      await setupDI();
       runApp(const App());
     },
     (error, stackTrace) {
