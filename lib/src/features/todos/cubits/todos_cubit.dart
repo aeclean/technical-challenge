@@ -18,19 +18,19 @@ class TodoCubit extends Cubit<TodoState> {
     emit(state.toLoading());
     final result = await todoService.add(title: title, isChecked: isChecked);
     final nextState = result.match(
-      (todo) => state.copyWith(todo: Some(todo)),
+      (todos) => state.copyWith(todos: Some(todos), isLoading: false),
       (error) => state.toError(error),
     );
     emit(nextState);
   }
 
-  Future<void> editTodo({
+  Future<void> toggleComplete({
     required Todo todo,
   }) async {
     emit(state.toLoading());
-    final result = await todoService.edit(todo: todo);
+    final result = await todoService.toggleComplete(todo: todo);
     final nextState = result.match(
-      (todo) => state.copyWith(todo: Some(todo)),
+      (todos) => state.copyWith(todos: Some(todos)),
       (error) => state.toError(error),
     );
     emit(nextState);
@@ -42,7 +42,18 @@ class TodoCubit extends Cubit<TodoState> {
     emit(state.toLoading());
     final result = await todoService.delete(todo: todo);
     final nextState = result.match(
-      (_) => state.copyWith(todo: const None()),
+      (todos) => state.copyWith(todos: Some(todos)),
+      (error) => state.toError(error),
+    );
+    emit(nextState);
+  }
+
+  Future<void> fetchTodos() async {
+    emit(state.toLoading());
+    final result = await todoService.fetch();
+
+    final nextState = result.match(
+      (todos) => state.copyWith(todos: Some(todos)),
       (error) => state.toError(error),
     );
     emit(nextState);
@@ -53,22 +64,26 @@ class TodoState extends Equatable {
   final bool isLoading;
   final Option<TodoError> error;
   final Option<Todo> todo;
+  final Option<List<Todo>> todos;
 
   const TodoState({
     this.isLoading = false,
     this.error = const None(),
     this.todo = const None(),
+    this.todos = const None(),
   });
 
   TodoState copyWith({
-    bool? isLoading,
+    bool? isLoading = false,
     Option<TodoError>? error,
     Option<Todo>? todo,
+    Option<List<Todo>>? todos,
   }) =>
       TodoState(
         isLoading: isLoading ?? this.isLoading,
         error: error ?? this.error,
         todo: todo ?? this.todo,
+        todos: todos ?? this.todos,
       );
 
   TodoState toLoading() => copyWith(
@@ -81,5 +96,10 @@ class TodoState extends Equatable {
       );
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [
+    isLoading,
+    error,
+    todo,
+    todos,
+  ];
 }
