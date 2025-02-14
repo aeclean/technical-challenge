@@ -28,10 +28,16 @@ class LocalTodoService implements TodoService {
   }
 
   @override
-  Future<Result<Todo, TodoError>> add({
+  Future<Result<List<Todo>, TodoError>> add({
     required String title, required bool isChecked,
   }) async {
     try {
+      final user = GetIt.instance<AuthService>().currentUser;
+      final todos = repository
+        .getStringList(user.email)
+        ?.map((e) => Todo.fromJson(jsonDecode(e)))
+        .toList();
+
       final uuid = DateTime.now().millisecondsSinceEpoch.toString();
       final todo = Todo(
         uuid: uuid,
@@ -39,37 +45,71 @@ class LocalTodoService implements TodoService {
         isChecked: isChecked,
       );
 
-      await repository.setString(uuid, todo.toString());
+      var newList = {...todos ?? []};
+      newList.add(todo);
 
-      return Ok(todo);
+      await repository.setStringList(
+        user.email,
+        newList.map((e) => jsonEncode(e)).toList(),
+      );
+
+      return Ok(newList.toList());
     } on Exception catch(_) {
       return Err(TodoErrorUnknown());
     }
   }
 
   @override
-  Future<Result<Todo, TodoError>> edit({
+  Future<Result<List<Todo>, TodoError>> toggleComplete({
     required Todo todo,
   }) async {
     try {
-      await repository.setString(
-        todo.uuid,
-        jsonEncode(todo.toString()),
+      final user = GetIt.instance<AuthService>().currentUser;
+      final todos = repository
+        .getStringList(user.email)
+        ?.map((e) => Todo.fromJson(jsonDecode(e)))
+        .toList();
+
+      todos?.removeWhere((t) => t.uuid == todo.uuid);
+
+      var updatedTodo = Todo(
+        title: todo.title,
+        isChecked: !todo.isChecked,
+        uuid: todo.uuid,
       );
 
-      return Ok(todo);
+      var newList = {...todos ?? []};
+      newList.add(updatedTodo);
+
+      await repository.setStringList(
+        user.email,
+        newList.map((e) => jsonEncode(e)).toList(),
+      );
+
+      return Ok(newList.toList());
     } on Exception catch(_) {
       return Err(TodoErrorNotFound());
     }
   }
 
   @override
-  Future<Result<void, TodoError>> delete({
+  Future<Result<List<Todo>, TodoError>> delete({
     required Todo todo,
   }) async {
     try {
-      await repository.remove(todo.uuid);
-      return const Ok(null);
+      final user = GetIt.instance<AuthService>().currentUser;
+      final todos = repository
+        .getStringList(user.email)
+        ?.map((e) => Todo.fromJson(jsonDecode(e)))
+        .toList();
+
+      todos?.removeWhere((t) => t.uuid == todo.uuid);
+
+      await repository.setStringList(
+        user.email,
+        todos?.map((e) => jsonEncode(e)).toList() ?? [],
+      );
+      return Ok(todos ?? []);
     } on Exception catch(_) {
       return Err(TodoErrorUnknown());
     }
