@@ -28,6 +28,8 @@ class LocalUserService implements AuthService {
         return Err(AuthErrorInvalidCredentials());
       }
 
+      await repository.setString("current_user", email);
+
       return Ok(user.first);
     } on Exception catch(_) {
       return Err(AuthErrorInvalidCredentials());
@@ -67,6 +69,8 @@ class LocalUserService implements AuthService {
       var userList = {...users};
       userList.add(user);
 
+      await repository.setString("current_user", email);
+
       await repository
         .setStringList("users",
           userList.map((e) => jsonEncode(e.toJson()))
@@ -85,7 +89,7 @@ class LocalUserService implements AuthService {
     .toList() ?? [];
 
   @override
-  User get currentUser => User.fromJson(
-    jsonDecode(repository.getString("current_user") ?? "{}"),
-  );
+  User get currentUser => users.where(
+    (u) => u.email == repository.getString("current_user"),
+  ).first;
 }
