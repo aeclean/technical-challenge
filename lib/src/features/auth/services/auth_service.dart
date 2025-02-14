@@ -6,4 +6,5 @@ abstract interface class AuthService {
   Future<Result<User, AuthError>> signUp({required String name, required String email, required String password});
   Future<Result<User, AuthError>> signIn({required String email, required String password});
   Future<Result<void, AuthError>> signOut();
+  User get currentUser;
 }
