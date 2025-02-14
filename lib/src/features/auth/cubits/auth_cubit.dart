@@ -47,6 +47,8 @@ class AuthCubit extends Cubit<AuthState> {
     );
     emit(nextState);
   }
+
+  Option<bool> get isUserLogged => Some(authService.currentUser.email.isNotEmpty);
 }
 
 class AuthState extends Equatable {
