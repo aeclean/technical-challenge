@@ -62,4 +62,8 @@ class AuthServiceMock implements AuthService {
       return Err(AuthErrorUnknown());
     }
   }
+
+  @override
+  // TODO: implement currentUser
+  User get currentUser => throw UnimplementedError();
 }
