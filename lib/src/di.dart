@@ -1,7 +1,9 @@
 import "dart:async";
 
-import "package:faithwave_app/src/adapters/mocks/auth_service_mock.dart";
+import "package:faithwave_app/src/adapters/local_todo_service.dart";
+import "package:faithwave_app/src/adapters/local_user_service.dart";
 import "package:faithwave_app/src/features/auth/services/auth_service.dart";
+import "package:faithwave_app/src/features/auth/services/todo_service.dart";
 import "package:get_it/get_it.dart";
 import "package:shared_preferences/shared_preferences.dart";
 
@@ -12,11 +14,15 @@ Future<void> setupDI() async {
   // Set up instances
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
   await sharedPreferences.reload();
-  AuthService authService = AuthServiceMock();
+
+  getIt.registerSingleton<SharedPreferences>(
+      sharedPreferences,
+    );
+
+  AuthService authService = LocalUserService();
+  TodoService todoService = LocalTodoService();
 
   getIt
-    ..registerSingleton<SharedPreferences>(
-      sharedPreferences,
-    )
-    ..registerSingleton<AuthService>(authService);
+    ..registerSingleton<AuthService>(authService)
+    ..registerSingleton<TodoService>(todoService);
 }
