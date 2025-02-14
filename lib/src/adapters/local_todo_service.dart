@@ -1,7 +1,7 @@
 import "dart:convert";
 
 import "package:faithwave_app/src/features/auth/services/auth_service.dart";
-import "package:faithwave_app/src/features/auth/services/todo_service.dart";
+import "package:faithwave_app/src/features/todos/services/todo_service.dart";
 import "package:faithwave_app/src/models/errors/todo_error.dart";
 import "package:faithwave_app/src/models/todo.dart";
 import "package:get_it/get_it.dart";

@@ -1,5 +1,5 @@
 import "package:equatable/equatable.dart";
-import "package:faithwave_app/src/features/auth/services/todo_service.dart";
+import "package:faithwave_app/src/features/todos/services/todo_service.dart";
 import "package:faithwave_app/src/models/errors/todo_error.dart";
 import "package:faithwave_app/src/models/todo.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
