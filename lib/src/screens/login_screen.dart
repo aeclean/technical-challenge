@@ -35,7 +35,7 @@ class LoginScreen extends StatelessWidget {
 class LoginView extends StatelessWidget {
   LoginView({super.key});
 
-  late TextEditingController passwordController = TextEditingController(); 
+  late TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -106,7 +106,7 @@ class LoginView extends StatelessWidget {
                     none: () => null,
                   );
                 } else if (state.isAuthenticated) {
-                  context.pushReplacement(AppRoute.home.path);
+                  context.go(AppRoute.home.path);
                 }
               },
             ),
