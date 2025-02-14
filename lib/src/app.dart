@@ -1,6 +1,7 @@
 import "package:faithwave_app/src/features/auth/cubits/auth_cubit.dart";
 import "package:faithwave_app/src/features/inputs/cubits/email_input_state.dart";
 import "package:faithwave_app/src/features/inputs/cubits/toggle_cubit.dart";
+import "package:faithwave_app/src/features/todos/cubits/todos_cubit.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter_easyloading/flutter_easyloading.dart";
@@ -52,6 +53,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => AuthCubit()),
+        BlocProvider(create: (_) => TodoCubit()),
         BlocProvider(create: (_) => ToggleCubit()),
         BlocProvider(create: (_) => EmailInputCubit()),
       ],
